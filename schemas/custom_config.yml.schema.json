@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ManimGL Custom Configuration",
+  "description": "Configuration schema for manimgl custom_config.yml. See: https://3b1b.github.io/manim/",
+  "type": "object",
+  "properties": {
+    "directories": {
+      "type": "object",
+      "description": "Directory paths for manimgl output and caching.",
+      "properties": {
+        "output": {
+          "type": "string",
+          "description": "Base output directory. Videos go to <output>/videos/, images to <output>/images/.",
+          "default": "./output"
+        },
+        "mirror_module_path": {
+          "type": "boolean",
+          "description": "When true, output files are saved in a subdirectory matching the source file path.",
+          "default": false
+        },
+        "cache": {
+          "type": "string",
+          "description": "Directory for cached LaTeX/Text renderings."
+        },
+        "temporary_storage": {
+          "type": "string",
+          "description": "Directory for temporary files during rendering."
+        }
+      }
+    },
+    "tex": {
+      "type": "object",
+      "description": "LaTeX configuration for Tex mobjects.",
+      "properties": {
+        "compiler": {
+          "type": "string",
+          "enum": ["latex", "xelatex", "pdflatex", "lualatex"],
+          "description": "LaTeX compiler to use.",
+          "default": "latex"
+        },
+        "preamble": {
+          "type": "string",
+          "description": "Custom LaTeX preamble added to all Tex documents."
+        },
+        "template": {
+          "type": "string",
+          "description": "Name of the tex template to use (from tex_templates.yml)."
+        },
+        "use_ctex": {
+          "type": "boolean",
+          "description": "Use ctex package for Chinese/Japanese/Korean text support.",
+          "default": false
+        }
+      }
+    },
+    "sizes": {
+      "type": "object",
+      "description": "Dimension constants used across manimgl.",
+      "properties": {
+        "frame_height": { "type": "number", "description": "Height of the animation frame in manim units.", "default": 8 },
+        "small_buff": { "type": "number", "description": "Small spacing buffer.", "default": 0.1 },
+        "med_small_buff": { "type": "number", "description": "Medium-small spacing buffer.", "default": 0.25 },
+        "med_large_buff": { "type": "number", "description": "Medium-large spacing buffer.", "default": 0.5 },
+        "large_buff": { "type": "number", "description": "Large spacing buffer.", "default": 1 }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "description": "Custom color definitions. Manimgl defines color palettes like blue_e through blue_a, red_e through red_a, etc.",
+      "additionalProperties": { "type": "string" }
+    },
+    "camera": {
+      "type": "object",
+      "description": "Default camera and rendering settings.",
+      "properties": {
+        "resolution": { "type": "string", "description": "Default output resolution in pixels (width x height). e.g., '1920x1080'.", "default": "1920x1080" },
+        "fps": { "type": "number", "description": "Default frames per second for output video.", "default": 30 },
+        "background_color": { "type": "string", "description": "Background color as hex string (e.g., '#000000') or named color.", "default": "#000000" },
+        "background_opacity": { "type": "number", "description": "Background opacity (0 = transparent, 1 = opaque).", "default": 1.0, "minimum": 0, "maximum": 1 }
+      }
+    },
+    "window": {
+      "type": "object",
+      "description": "Interactive window settings.",
+      "properties": {
+        "position": { "type": "string", "description": "Default window position on screen." },
+        "size": { "type": "string", "description": "Default window size. Use 'default' for auto-sizing.", "default": "default" },
+        "full_screen": { "type": "boolean", "description": "Open the preview window in full screen mode.", "default": false },
+        "borderless": { "type": "boolean", "description": "Open the window without borders.", "default": false },
+        "always_on_top": { "type": "boolean", "description": "Keep the preview window always on top.", "default": false }
+      }
+    },
+    "universal_import_line": {
+      "type": "string",
+      "description": "Import line executed automatically when entering interactive mode.",
+      "default": "from manimlib import *"
+    },
+    "ignore_manimlib_modules_on_reload": {
+      "type": "boolean",
+      "description": "When true, manimlib internal modules are not reloaded on autoreload.",
+      "default": false
+    },
+    "style": {
+      "type": "object",
+      "description": "Visual style presets for manimgl scenes.",
+      "properties": {
+        "font": { "type": "string", "description": "Default font for Text mobjects." },
+        "font_size": { "type": "number", "description": "Default font size." },
+        "stroke_width": { "type": "number", "description": "Default stroke width for mobjects." },
+        "fill_opacity": { "type": "number", "description": "Default fill opacity.", "default": 1.0, "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

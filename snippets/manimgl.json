@@ -1,0 +1,157 @@
+{
+  "manimgl scene": {
+    "prefix": "manimgl-scene",
+    "body": [
+      "from manimlib import *",
+      "",
+      "class ${1:MyScene}(Scene):",
+      "\tdef construct(self):",
+      "\t\t${2:# Your animation code here}",
+      "\t\t$0"
+    ],
+    "description": "Create a basic manimgl Scene class"
+  },
+  "manimgl 3D scene": {
+    "prefix": "manimgl-3dscene",
+    "body": [
+      "from manimlib import *",
+      "",
+      "class ${1:My3DScene}(ThreeDScene):",
+      "\tdef construct(self):",
+      "\t\taxes = ThreeDAxes()",
+      "\t\tself.add(axes)",
+      "\t\t${2:# 3D animation code}",
+      "\t\tself.move_camera(phi=${3:60} * DEG, theta=${4:-45} * DEG)",
+      "\t\tself.wait()",
+      "\t\t$0"
+    ],
+    "description": "Create a 3D manimgl Scene class"
+  },
+  "manimgl checkpoint": {
+    "prefix": "manimgl-checkpoint",
+    "body": [
+      "# ${1:checkpoint_name}",
+      "${2:}"
+    ],
+    "description": "Insert a manimgl checkpoint comment"
+  },
+  "manimgl embed": {
+    "prefix": "manimgl-embed",
+    "body": [
+      "self.embed()"
+    ],
+    "description": "Pause and enter interactive IPython mode"
+  },
+  "manimgl play": {
+    "prefix": "manimgl-play",
+    "body": [
+      "self.play(${1:Write(${2:mobject})})"
+    ],
+    "description": "Play an animation"
+  },
+  "manimgl wait": {
+    "prefix": "manimgl-wait",
+    "body": [
+      "self.wait(${1:1})"
+    ],
+    "description": "Pause for N seconds"
+  },
+  "manimgl add": {
+    "prefix": "manimgl-add",
+    "body": [
+      "self.add(${1:mobject})"
+    ],
+    "description": "Add a mobject to the scene"
+  },
+  "manimgl Circle": {
+    "prefix": "manimgl-circle",
+    "body": [
+      "Circle(${1:radius=1}, color=${2:BLUE})"
+    ],
+    "description": "Create a Circle mobject"
+  },
+  "manimgl Square": {
+    "prefix": "manimgl-square",
+    "body": [
+      "Square(side_length=${1:2}, color=${2:BLUE})"
+    ],
+    "description": "Create a Square mobject"
+  },
+  "manimgl Tex": {
+    "prefix": "manimgl-tex",
+    "body": [
+      "Tex(\"${1:\\\\sum_{n=1}^\\\\infty \\\\frac{1}{n^2} = \\\\frac{\\\\pi^2}{6}}\")"
+    ],
+    "description": "Create a LaTeX Tex mobject"
+  },
+  "manimgl Text": {
+    "prefix": "manimgl-text",
+    "body": [
+      "Text(\"${1:Hello}\", font_size=${2:72})"
+    ],
+    "description": "Create a Text mobject"
+  },
+  "manimgl Arrow": {
+    "prefix": "manimgl-arrow",
+    "body": [
+      "Arrow(${1:ORIGIN}, ${2:RIGHT * 2}, color=${3:YELLOW})"
+    ],
+    "description": "Create an Arrow mobject"
+  },
+  "manimgl VGroup": {
+    "prefix": "manimgl-vgroup",
+    "body": [
+      "VGroup(${1:mobject1}, ${2:mobject2})"
+    ],
+    "description": "Create a VGroup"
+  },
+  "manimgl Transform": {
+    "prefix": "manimgl-transform",
+    "body": [
+      "self.play(Transform(${1:from_mob}, ${2:to_mob}))"
+    ],
+    "description": "Transform one mobject into another"
+  },
+  "manimgl FadeIn": {
+    "prefix": "manimgl-fadein",
+    "body": [
+      "self.play(FadeIn(${1:mobject}))"
+    ],
+    "description": "Fade in a mobject"
+  },
+  "manimgl FadeOut": {
+    "prefix": "manimgl-fadeout",
+    "body": [
+      "self.play(FadeOut(${1:mobject}))"
+    ],
+    "description": "Fade out a mobject"
+  },
+  "manimgl always_redraw": {
+    "prefix": "manimgl-redraw",
+    "body": [
+      "always_redraw(lambda: ${1:mobject})"
+    ],
+    "description": "Create an always-redrawing mobject (for value tracking)"
+  },
+  "manimgl ValueTracker": {
+    "prefix": "manimgl-valuetracker",
+    "body": [
+      "ValueTracker(${1:0})"
+    ],
+    "description": "Create a ValueTracker for animated values"
+  },
+  "manimgl NumberLine": {
+    "prefix": "manimgl-numberline",
+    "body": [
+      "NumberLine(x_range=[${1:-5}, ${2:5}, ${3:1}])"
+    ],
+    "description": "Create a NumberLine mobject"
+  },
+  "manimgl Axes": {
+    "prefix": "manimgl-axes",
+    "body": [
+      "Axes(x_range=[${1:-5}, ${2:5}, ${3:1}], y_range=[${4:-5}, ${5:5}, ${6:1}])"
+    ],
+    "description": "Create a 2D Axes mobject"
+  }
+}

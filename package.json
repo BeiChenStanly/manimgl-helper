@@ -1,0 +1,217 @@
+{
+  "name": "manimgl-helper",
+  "displayName": "manimgl-helper",
+  "description": "Simplify and speed up manimgl math animation workflow",
+  "version": "0.1.0",
+  "publisher": "manimgl-helper",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/manimgl-helper"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Data Science",
+    "Visualization"
+  ],
+  "keywords": [
+    "manimgl",
+    "manim",
+    "math",
+    "animation",
+    "3blue1brown"
+  ],
+  "activationEvents": [
+    "onLanguage:python",
+    "onLanguage:yaml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "manimgl-helper.runScene",
+        "title": "Run Scene (Interactive)",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.exportScene",
+        "title": "Export Scene (Video)",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.exportAllScenes",
+        "title": "Export All Scenes (Video)",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.quickExportScene",
+        "title": "Quick Export (Low Quality)",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.runFromCheckpoint",
+        "title": "Run from Checkpoint",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.selectAndRunScene",
+        "title": "Select Scene to Run...",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.checkManimgl",
+        "title": "Check manimgl Installation",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.openConfigFile",
+        "title": "Open custom_config.yml",
+        "category": "ManimGL"
+      },
+      {
+        "command": "manimgl-helper.createScene",
+        "title": "Create New Scene File",
+        "category": "ManimGL"
+      }
+    ],
+    "languages": [
+      {
+        "id": "manimgl-config",
+        "filenames": [
+          "custom_config.yml"
+        ],
+        "aliases": [
+          "ManimGL Config"
+        ]
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": "**/custom_config.yml",
+        "url": "./schemas/custom_config.yml.schema.json"
+      }
+    ],
+    "configuration": {
+      "title": "ManimGL Helper",
+      "properties": {
+        "manimgl-helper.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the Python interpreter with manimgl installed. Leave empty to auto-detect."
+        },
+        "manimgl-helper.defaultFlags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Default CLI flags to append when running manimgl (e.g., [\"-w\", \"-l\"])."
+        },
+        "manimgl-helper.autoCheckVersion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically check manimgl installation on extension activation."
+        },
+        "manimgl-helper.checkpointPasteDelay": {
+          "type": "number",
+          "default": 4000,
+          "minimum": 600,
+          "maximum": 30000,
+          "description": "Delay in milliseconds before auto-calling checkpoint_paste() after launching manimgl. Increase if your scene takes long to load."
+        },
+        "manimgl-helper.checkpointReloadDelay": {
+          "type": "number",
+          "default": 3000,
+          "minimum": 500,
+          "maximum": 20000,
+          "description": "Delay in milliseconds before auto-calling checkpoint_paste() after a hot-reload (reload_scene). Shorter than checkpointPasteDelay because the Python process is already running."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "manimgl-setup",
+        "title": "Get Started with ManimGL Helper",
+        "description": "Set up manimgl and start creating animations.",
+        "steps": [
+          {
+            "id": "clone-manimgl",
+            "title": "Clone manimgl from GitHub",
+            "description": "To get the latest version of manimgl, clone the official repository from GitHub.",
+            "media": {
+              "markdown": "manimgl-walkthrough/clone-repo.md"
+            },
+            "completionEvents": [
+              "onCommand:manimgl-helper.checkManimgl"
+            ]
+          },
+          {
+            "id": "install-manimgl",
+            "title": "Install manimgl in editable mode",
+            "description": "Install manimgl with `pip install -e .` for the latest development version.",
+            "media": {
+              "markdown": "manimgl-walkthrough/install-manimgl.md"
+            },
+            "completionEvents": [
+              "onCommand:manimgl-helper.checkManimgl"
+            ]
+          },
+          {
+            "id": "verify-install",
+            "title": "Verify Installation",
+            "description": "Check that manimgl is installed correctly and ready to use.",
+            "media": {
+              "markdown": "manimgl-walkthrough/verify.md"
+            },
+            "completionEvents": [
+              "onCommand:manimgl-helper.checkManimgl"
+            ]
+          },
+          {
+            "id": "create-first-scene",
+            "title": "Create Your First Scene",
+            "description": "Create a new scene file and run it to see manimgl in action.",
+            "media": {
+              "markdown": "manimgl-walkthrough/first-scene.md"
+            },
+            "completionEvents": [
+              "onCommand:manimgl-helper.createScene"
+            ]
+          }
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "python",
+        "path": "./snippets/manimgl.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vscode/test-electron": "^3.0.0",
+    "@vscode/vsce": "^3.9.2",
+    "chai": "^6.2.2",
+    "eslint": "^8.50.0",
+    "mocha": "^11.7.6",
+    "typescript": "^5.3.0"
+  }
+}

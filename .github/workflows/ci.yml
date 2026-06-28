@@ -34,27 +34,4 @@ jobs:
         if: runner.os != 'Linux'
         run: npm test
 
-  package:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Package VSIX
-        run: npx vsce package
-
-      - name: Upload VSIX artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: manimgl-helper-vsix
-          path: '*.vsix'
-
 

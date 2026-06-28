@@ -1,10 +1,11 @@
 {
   "name": "manimgl-helper",
-  "displayName": "manimgl-helper",
+  "displayName": "Manimgl Helper",
   "description": "Simplify and speed up manimgl math animation workflow",
   "version": "0.1.0",
-  "publisher": "manimgl-helper",
+  "publisher": "BeiChenStanly",
   "license": "MIT",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/user/manimgl-helper"

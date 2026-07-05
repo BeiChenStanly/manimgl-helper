@@ -2,7 +2,7 @@
   "name": "manimgl-helper",
   "displayName": "Manimgl Helper",
   "description": "Simplify and speed up manimgl math animation workflow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "BeiChenStanly",
   "license": "MIT",
   "icon": "icon.png",

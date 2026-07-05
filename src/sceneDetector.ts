@@ -89,10 +89,33 @@ export class SceneDetector {
             return false;
         }
 
-        const sceneIndentation = this.getLineIndentation(document.lineAt(scene.lineNumber).text);
-        const checkpointIndentation = this.getLineIndentation(document.lineAt(lineNumber).text);
+        const sceneLineText = document.lineAt(scene.lineNumber).text;
+        const sceneIndentation = this.getLineIndentation(sceneLineText);
 
-        return checkpointIndentation > sceneIndentation;
+        const checkpointLineText = document.lineAt(lineNumber).text;
+        const checkpointIndentation = this.getLineIndentation(checkpointLineText);
+        if (checkpointIndentation <= sceneIndentation) {
+            return false;
+        }
+
+        const sceneEndLine = this.findBlockEndLine(document, scene.lineNumber, sceneIndentation);
+        return lineNumber < sceneEndLine;
+    }
+
+    private findBlockEndLine(document: vscode.TextDocument, startLine: number, startIndentation: number): number {
+        for (let i = startLine + 1; i < document.lineCount; i++) {
+            const text = document.lineAt(i).text;
+            const trimmed = text.trim();
+            if (trimmed.length === 0) {
+                continue;
+            }
+
+            const indentation = this.getLineIndentation(text);
+            if (indentation <= startIndentation) {
+                return i;
+            }
+        }
+        return document.lineCount;
     }
 
     private getLineIndentation(text: string): number {

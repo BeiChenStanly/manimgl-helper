@@ -145,6 +145,10 @@ class MyScene(Scene):
         pass
 
 # trailing note
+
+if __name__ == "__main__":
+    # main note
+    pass
 `,
             language: 'python'
         });
@@ -154,7 +158,7 @@ class MyScene(Scene):
         assert.ok(checkpoints.some(cp => cp.text.includes('inside construct')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('top-level note')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('trailing note')));
-    });
+        assert.ok(!checkpoints.some(cp => cp.text.includes('main note')));
 
     test('detectCheckpoints: excludes shebang', async () => {
         const doc = await vscode.workspace.openTextDocument({

@@ -43,21 +43,43 @@ export class SceneDetector {
 
     detectSceneCheckpoints(document: vscode.TextDocument): CheckpointInfo[] {
         const checkpoints: CheckpointInfo[] = [];
-        const text = document.getText();
-        const lines = text.split('\n');
+        const lines = document.getText().split('\n');
+        const scenes = this.detectScenes(document);
 
+        let sceneIndex = 0;
+        let activeScene: SceneInfo | undefined = scenes[sceneIndex];
+        let activeSceneIndentation = activeScene ? this.getLineIndentation(lines[activeScene.lineNumber]) : 0;
         let inTripleQuote = false;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const trimmed = line.trim();
-
             const tripleCount = (trimmed.match(/"""/g) || []).length + (trimmed.match(/'''/g) || []).length;
-            if (tripleCount % 2 === 1) {
+            const togglesTripleQuote = tripleCount % 2 === 1;
+            const lineIsTripleQuoteContent = inTripleQuote || togglesTripleQuote;
+
+            if (togglesTripleQuote) {
                 inTripleQuote = !inTripleQuote;
             }
 
-            if (inTripleQuote) { continue; }
+            if (activeScene && i > activeScene.lineNumber && !lineIsTripleQuoteContent) {
+                if (trimmed.length > 0) {
+                    const indentation = this.getLineIndentation(line);
+                    if (indentation <= activeSceneIndentation) {
+                        activeScene = undefined;
+                    }
+                }
+            }
+
+            if (sceneIndex < scenes.length && scenes[sceneIndex].lineNumber === i) {
+                activeScene = scenes[sceneIndex];
+                activeSceneIndentation = this.getLineIndentation(line);
+                sceneIndex++;
+            }
+
+            if (lineIsTripleQuoteContent) { continue; }
+
+            if (!activeScene || i <= activeScene.lineNumber) { continue; }
 
             if (!trimmed.startsWith('#')) { continue; }
 
@@ -71,49 +93,12 @@ export class SceneDetector {
 
             if (/^(type:|noqa|pylint:|TODO|FIXME|HACK|NOTE|XXX):?\s/.test(commentContent)) { continue; }
 
-            if (!this.isCheckpointInsideScene(document, i)) { continue; }
-
             checkpoints.push({
                 text: line,
                 lineNumber: i
             });
         }
         return checkpoints;
-    }
-
-    private isCheckpointInsideScene(document: vscode.TextDocument, lineNumber: number): boolean {
-        const scene = this.findContainingScene(document, lineNumber);
-        if (!scene) {
-            return false;
-        }
-
-        const sceneLineText = document.lineAt(scene.lineNumber).text;
-        const sceneIndentation = this.getLineIndentation(sceneLineText);
-
-        const checkpointLineText = document.lineAt(lineNumber).text;
-        const checkpointIndentation = this.getLineIndentation(checkpointLineText);
-        if (checkpointIndentation <= sceneIndentation) {
-            return false;
-        }
-
-        const sceneEndLine = this.findBlockEndLine(document, scene.lineNumber, sceneIndentation);
-        return lineNumber < sceneEndLine;
-    }
-
-    private findBlockEndLine(document: vscode.TextDocument, startLine: number, startIndentation: number): number {
-        for (let i = startLine + 1; i < document.lineCount; i++) {
-            const text = document.lineAt(i).text;
-            const trimmed = text.trim();
-            if (trimmed.length === 0) {
-                continue;
-            }
-
-            const indentation = this.getLineIndentation(text);
-            if (indentation <= startIndentation) {
-                return i;
-            }
-        }
-        return document.lineCount;
     }
 
     private getLineIndentation(text: string): number {

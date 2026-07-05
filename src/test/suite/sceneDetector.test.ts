@@ -133,6 +133,26 @@ class MyScene(Scene):
         assert.ok(checkpoints.some(cp => cp.text.includes('animate')));
     });
 
+    test('detectSceneCheckpoints: keeps checkpoints after triple-quoted strings with column-0 content', async () => {
+        const doc = await vscode.workspace.openTextDocument({
+            content: `from manimlib import *
+
+class MyScene(Scene):
+    def construct(self):
+        text = """
+line one
+line two
+"""
+        # after string
+        self.play(FadeIn(Text(text)))
+`,
+            language: 'python'
+        });
+
+        const checkpoints = detector.detectSceneCheckpoints(doc);
+        assert.ok(checkpoints.some(cp => cp.text.includes('after string')));
+    });
+
     test('detectSceneCheckpoints: excludes comments outside Scene bodies', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `from manimlib import *

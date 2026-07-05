@@ -8,7 +8,7 @@
   "icon": "icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/user/manimgl-helper"
+    "url": "https://github.com/BeiChenStanly/manimgl-helper"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -27,7 +27,8 @@
   ],
   "activationEvents": [
     "onLanguage:python",
-    "onLanguage:yaml"
+    "onLanguage:yaml",
+    "onLanguage:manimgl-config"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -87,6 +88,13 @@
         "aliases": [
           "ManimGL Config"
         ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "manimgl-config",
+        "scopeName": "source.manimgl-config",
+        "path": "./syntaxes/manimgl-config.tmLanguage.json"
       }
     ],
     "jsonValidation": [

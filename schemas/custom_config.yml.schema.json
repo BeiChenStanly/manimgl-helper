@@ -1,114 +1,558 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "ManimGL Custom Configuration",
-  "description": "Configuration schema for manimgl custom_config.yml. See: https://3b1b.github.io/manim/",
-  "type": "object",
-  "properties": {
-    "directories": {
-      "type": "object",
-      "description": "Directory paths for manimgl output and caching.",
-      "properties": {
-        "output": {
-          "type": "string",
-          "description": "Base output directory. Videos go to <output>/videos/, images to <output>/images/.",
-          "default": "./output"
-        },
-        "mirror_module_path": {
-          "type": "boolean",
-          "description": "When true, output files are saved in a subdirectory matching the source file path.",
-          "default": false
-        },
-        "cache": {
-          "type": "string",
-          "description": "Directory for cached LaTeX/Text renderings."
-        },
-        "temporary_storage": {
-          "type": "string",
-          "description": "Directory for temporary files during rendering."
-        }
-      }
-    },
-    "tex": {
-      "type": "object",
-      "description": "LaTeX configuration for Tex mobjects.",
-      "properties": {
-        "compiler": {
-          "type": "string",
-          "enum": ["latex", "xelatex", "pdflatex", "lualatex"],
-          "description": "LaTeX compiler to use.",
-          "default": "latex"
-        },
-        "preamble": {
-          "type": "string",
-          "description": "Custom LaTeX preamble added to all Tex documents."
-        },
-        "template": {
-          "type": "string",
-          "description": "Name of the tex template to use (from tex_templates.yml)."
-        },
-        "use_ctex": {
-          "type": "boolean",
-          "description": "Use ctex package for Chinese/Japanese/Korean text support.",
-          "default": false
-        }
-      }
-    },
-    "sizes": {
-      "type": "object",
-      "description": "Dimension constants used across manimgl.",
-      "properties": {
-        "frame_height": { "type": "number", "description": "Height of the animation frame in manim units.", "default": 8 },
-        "small_buff": { "type": "number", "description": "Small spacing buffer.", "default": 0.1 },
-        "med_small_buff": { "type": "number", "description": "Medium-small spacing buffer.", "default": 0.25 },
-        "med_large_buff": { "type": "number", "description": "Medium-large spacing buffer.", "default": 0.5 },
-        "large_buff": { "type": "number", "description": "Large spacing buffer.", "default": 1 }
-      }
-    },
-    "colors": {
-      "type": "object",
-      "description": "Custom color definitions. Manimgl defines color palettes like blue_e through blue_a, red_e through red_a, etc.",
-      "additionalProperties": { "type": "string" }
-    },
-    "camera": {
-      "type": "object",
-      "description": "Default camera and rendering settings.",
-      "properties": {
-        "resolution": { "type": "string", "description": "Default output resolution in pixels (width x height). e.g., '1920x1080'.", "default": "1920x1080" },
-        "fps": { "type": "number", "description": "Default frames per second for output video.", "default": 30 },
-        "background_color": { "type": "string", "description": "Background color as hex string (e.g., '#000000') or named color.", "default": "#000000" },
-        "background_opacity": { "type": "number", "description": "Background opacity (0 = transparent, 1 = opaque).", "default": 1.0, "minimum": 0, "maximum": 1 }
-      }
-    },
-    "window": {
-      "type": "object",
-      "description": "Interactive window settings.",
-      "properties": {
-        "position": { "type": "string", "description": "Default window position on screen." },
-        "size": { "type": "string", "description": "Default window size. Use 'default' for auto-sizing.", "default": "default" },
-        "full_screen": { "type": "boolean", "description": "Open the preview window in full screen mode.", "default": false },
-        "borderless": { "type": "boolean", "description": "Open the window without borders.", "default": false },
-        "always_on_top": { "type": "boolean", "description": "Keep the preview window always on top.", "default": false }
-      }
-    },
-    "universal_import_line": {
-      "type": "string",
-      "description": "Import line executed automatically when entering interactive mode.",
-      "default": "from manimlib import *"
-    },
-    "ignore_manimlib_modules_on_reload": {
-      "type": "boolean",
-      "description": "When true, manimlib internal modules are not reloaded on autoreload.",
-      "default": false
-    },
-    "style": {
-      "type": "object",
-      "description": "Visual style presets for manimgl scenes.",
-      "properties": {
-        "font": { "type": "string", "description": "Default font for Text mobjects." },
-        "font_size": { "type": "number", "description": "Default font size." },
-        "stroke_width": { "type": "number", "description": "Default stroke width for mobjects." },
-        "fill_opacity": { "type": "number", "description": "Default fill opacity.", "default": 1.0, "minimum": 0, "maximum": 1 }
-      }
-    }
-  }
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "ManimGL Custom Configuration",
+	"description": "Configuration schema for manimgl custom_config.yml. See: https://github.com/3b1b/manim",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"directories": {
+			"type": "object",
+			"description": "Directory paths for manimgl output, assets, and caching.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"mirror_module_path": {
+					"type": "boolean",
+					"description": "When true, output files are saved in a subdirectory matching the source file's directory structure.",
+					"default": false
+				},
+				"base": {
+					"type": "string",
+					"description": "Base directory for all output/asset paths. If empty, uses the current working directory.",
+					"default": ""
+				},
+				"subdirs": {
+					"type": "object",
+					"description": "Subdirectory names for different types of files.",
+					"default": {},
+					"additionalProperties": false,
+					"properties": {
+						"output": {
+							"type": "string",
+							"description": "Subdirectory for rendered video and image output files.",
+							"default": "videos"
+						},
+						"raster_images": {
+							"type": "string",
+							"description": "Subdirectory for raster image assets (PNG, JPG, etc.).",
+							"default": "raster_images"
+						},
+						"vector_images": {
+							"type": "string",
+							"description": "Subdirectory for vector image assets (SVG, etc.).",
+							"default": "vector_images"
+						},
+						"three_d_models": {
+							"type": "string",
+							"description": "Subdirectory for 3D model files.",
+							"default": "three_d_models"
+						},
+						"sounds": {
+							"type": "string",
+							"description": "Subdirectory for sound assets.",
+							"default": "sounds"
+						},
+						"data": {
+							"type": "string",
+							"description": "Subdirectory for data files (CSV, JSON, etc.).",
+							"default": "data"
+						},
+						"downloads": {
+							"type": "string",
+							"description": "Subdirectory for downloaded files.",
+							"default": "downloads"
+						},
+						"latex_cache": {
+							"type": "string",
+							"description": "Subdirectory for cached LaTeX compilation results.",
+							"default": "latex_cache"
+						}
+					}
+				},
+				"cache": {
+					"type": "string",
+					"description": "Custom cache directory for Tex/Text compilation artifacts. If empty, uses appdirs.user_cache_dir('manim').",
+					"default": ""
+				}
+			}
+		},
+		"window": {
+			"type": "object",
+			"description": "Interactive preview window settings.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"position_string": {
+					"type": "string",
+					"description": "Window position on screen. UR=Upper Right, UL=Upper Left, DR=Down Right, DL=Down Left, OO=Center, UO=Upper Middle, DO=Down Middle, LO=Left Middle, RO=Right Middle.",
+					"default": "UR",
+					"enum": ["UR", "UL", "DR", "DL", "OO", "UO", "DO", "LO", "RO"]
+				},
+				"monitor_index": {
+					"type": "integer",
+					"description": "When using multiple monitors, which monitor to show the window on (0-indexed).",
+					"default": 0,
+					"minimum": 0
+				},
+				"full_screen": {
+					"type": "boolean",
+					"description": "Open the preview window in full screen mode.",
+					"default": false
+				},
+				"position": {
+					"type": "string",
+					"description": "Specific window position in pixel coordinates, e.g. '(500, 500)'. Overrides position_string if set.",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				},
+				"size": {
+					"type": "string",
+					"description": "Specific window size in pixels, e.g. '(1920, 1080)'. Overrides full_screen if set.",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				}
+			}
+		},
+		"camera": {
+			"type": "object",
+			"description": "Default camera and rendering settings.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"resolution": {
+					"type": "string",
+					"description": "Default output resolution as a tuple '(width, height)' in pixels.",
+					"default": "(1920, 1080)",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				},
+				"background_color": {
+					"type": "string",
+					"description": "Background color as hex string (e.g. '#333333') or a named color.",
+					"default": "#333333"
+				},
+				"fps": {
+					"type": "integer",
+					"description": "Frames per second for rendered video output.",
+					"default": 30,
+					"minimum": 1,
+					"maximum": 120
+				},
+				"background_opacity": {
+					"type": "number",
+					"description": "Background opacity (0.0 = fully transparent, 1.0 = fully opaque).",
+					"default": 1.0,
+					"minimum": 0.0,
+					"maximum": 1.0
+				}
+			}
+		},
+		"file_writer": {
+			"type": "object",
+			"description": "FFmpeg and file encoding settings for video output.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"ffmpeg_bin": {
+					"type": "string",
+					"description": "Path or command name for the FFmpeg binary.",
+					"default": "ffmpeg"
+				},
+				"video_codec": {
+					"type": "string",
+					"description": "FFmpeg video codec to use for encoding.",
+					"default": "libx264"
+				},
+				"pixel_format": {
+					"type": "string",
+					"description": "FFmpeg pixel format for output video.",
+					"default": "yuv420p"
+				},
+				"saturation": {
+					"type": "number",
+					"description": "Color saturation multiplier for output video (1.0 = original).",
+					"default": 1.0,
+					"minimum": 0.0
+				},
+				"gamma": {
+					"type": "number",
+					"description": "Gamma correction for output video (1.0 = no correction).",
+					"default": 1.0,
+					"minimum": 0.0
+				}
+			}
+		},
+		"scene": {
+			"type": "object",
+			"description": "Default scene behavior settings.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"show_animation_progress": {
+					"type": "boolean",
+					"description": "Show progress bar during animation rendering.",
+					"default": false
+				},
+				"leave_progress_bars": {
+					"type": "boolean",
+					"description": "Keep progress bar lines visible after rendering completes.",
+					"default": false
+				},
+				"preview_while_skipping": {
+					"type": "boolean",
+					"description": "When skipping animations, render a single frame at the end of each play() call.",
+					"default": true
+				},
+				"default_wait_time": {
+					"type": "number",
+					"description": "Default duration in seconds for Scene.wait() when no argument is given.",
+					"default": 1.0,
+					"minimum": 0.0
+				}
+			}
+		},
+		"vmobject": {
+			"type": "object",
+			"description": "Default styling for VMobject (fillable/strokable vector mobjects).",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"default_stroke_width": {
+					"type": "number",
+					"description": "Default stroke width for VMobjects.",
+					"default": 4.0,
+					"minimum": 0.0
+				},
+				"default_stroke_color": {
+					"type": "string",
+					"description": "Default stroke color for VMobjects (hex or named color). Default is GREY_A (#DDDDDD).",
+					"default": "#DDDDDD"
+				},
+				"default_fill_color": {
+					"type": "string",
+					"description": "Default fill color for VMobjects (hex or named color). Default is GREY_C (#888888).",
+					"default": "#888888"
+				}
+			}
+		},
+		"mobject": {
+			"type": "object",
+			"description": "Default styling for base Mobjects.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"default_mobject_color": {
+					"type": "string",
+					"description": "Default color for Mobjects (hex or named color). Default is WHITE (#FFFFFF).",
+					"default": "#FFFFFF"
+				},
+				"default_light_color": {
+					"type": "string",
+					"description": "Default color for light/shading on Mobjects (hex or named color). Default is GREY_B (#BBBBBB).",
+					"default": "#BBBBBB"
+				}
+			}
+		},
+		"tex": {
+			"type": "object",
+			"description": "LaTeX template configuration for Tex mobjects.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"template": {
+					"type": "string",
+					"description": "Name of the LaTeX template to use (from tex_templates.yml). Set to 'default' for the built-in template.",
+					"default": "default"
+				},
+				"font_size_for_unit_height": {
+					"type": "integer",
+					"description": "The font size at which Tex(\"0\") has a height of 1 manim unit.",
+					"default": 144
+				}
+			}
+		},
+		"text": {
+			"type": "object",
+			"description": "Default text rendering settings.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"font": {
+					"type": "string",
+					"description": "Default font family to use for Text mobjects.",
+					"default": "Consolas"
+				},
+				"alignment": {
+					"type": "string",
+					"description": "Default text alignment. Valid values: LEFT, CENTER, RIGHT.",
+					"default": "LEFT",
+					"enum": ["LEFT", "CENTER", "RIGHT"]
+				},
+				"font_size_for_unit_height": {
+					"type": "integer",
+					"description": "The font size at which Text(\"0\") has a height of 1 manim unit.",
+					"default": 144
+				}
+			}
+		},
+		"embed": {
+			"type": "object",
+			"description": "Settings for the interactive IPython embedding (self.embed()).",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"exception_mode": {
+					"type": "string",
+					"description": "Exception verbosity mode when embedded. Use 'Verbose' for detailed tracebacks.",
+					"default": "Verbose"
+				},
+				"autoreload": {
+					"type": "boolean",
+					"description": "Automatically reload modules before each interactive command.",
+					"default": false
+				}
+			}
+		},
+		"resolution_options": {
+			"type": "object",
+			"description": "Pre-defined resolution presets used by CLI flags (-l, -m, --hd, --uhd).",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"low": {
+					"type": "string",
+					"description": "Low quality resolution tuple. Used with -l flag.",
+					"default": "(854, 480)",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				},
+				"med": {
+					"type": "string",
+					"description": "Medium quality resolution tuple. Used with -m flag.",
+					"default": "(1280, 720)",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				},
+				"high": {
+					"type": "string",
+					"description": "High quality resolution tuple. Used with --hd flag.",
+					"default": "(1920, 1080)",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				},
+				"4k": {
+					"type": "string",
+					"description": "4K quality resolution tuple. Used with --uhd flag.",
+					"default": "(3840, 2160)",
+					"pattern": "^\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)$"
+				}
+			}
+		},
+		"sizes": {
+			"type": "object",
+			"description": "Dimension constants that control the coordinate system and default spacing.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"frame_height": {
+					"type": "number",
+					"description": "Height of the animation frame in manim units. Determines the scale of the coordinate system.",
+					"default": 8.0,
+					"minimum": 0.1
+				},
+				"small_buff": {
+					"type": "number",
+					"description": "Small spacing buffer constant (SMALL_BUFF).",
+					"default": 0.1,
+					"minimum": 0.0
+				},
+				"med_small_buff": {
+					"type": "number",
+					"description": "Medium-small spacing buffer constant (MED_SMALL_BUFF).",
+					"default": 0.25,
+					"minimum": 0.0
+				},
+				"med_large_buff": {
+					"type": "number",
+					"description": "Medium-large spacing buffer constant (MED_LARGE_BUFF).",
+					"default": 0.5,
+					"minimum": 0.0
+				},
+				"large_buff": {
+					"type": "number",
+					"description": "Large spacing buffer constant (LARGE_BUFF).",
+					"default": 1.0,
+					"minimum": 0.0
+				},
+				"default_mobject_to_edge_buff": {
+					"type": "number",
+					"description": "Default buffer used in Mobject.to_edge().",
+					"default": 0.5,
+					"minimum": 0.0
+				},
+				"default_mobject_to_mobject_buff": {
+					"type": "number",
+					"description": "Default buffer used in Mobject.next_to() for spacing between mobjects.",
+					"default": 0.25,
+					"minimum": 0.0
+				}
+			}
+		},
+		"key_bindings": {
+			"type": "object",
+			"description": "Keyboard shortcut bindings for the interactive preview window.",
+			"default": {},
+			"additionalProperties": false,
+			"properties": {
+				"pan_3d": {
+					"type": "string",
+					"description": "Key binding for 3D pan mode.",
+					"default": "d"
+				},
+				"pan": {
+					"type": "string",
+					"description": "Key binding for pan mode.",
+					"default": "f"
+				},
+				"reset": {
+					"type": "string",
+					"description": "Key binding to reset the camera view.",
+					"default": "r"
+				},
+				"quit": {
+					"type": "string",
+					"description": "Key binding to quit interactive mode (together with Command/Ctrl).",
+					"default": "q"
+				},
+				"select": {
+					"type": "string",
+					"description": "Key binding for selection mode.",
+					"default": "s"
+				},
+				"unselect": {
+					"type": "string",
+					"description": "Key binding to unselect all objects.",
+					"default": "u"
+				},
+				"grab": {
+					"type": "string",
+					"description": "Key binding for grab/drag mode.",
+					"default": "g"
+				},
+				"x_grab": {
+					"type": "string",
+					"description": "Key binding to grab along the X axis only.",
+					"default": "h"
+				},
+				"y_grab": {
+					"type": "string",
+					"description": "Key binding to grab along the Y axis only.",
+					"default": "v"
+				},
+				"z_grab": {
+					"type": "string",
+					"description": "Key binding to grab along the Z axis only.",
+					"default": "z"
+				},
+				"resize": {
+					"type": "string",
+					"description": "Key binding for resize mode.",
+					"default": "t"
+				},
+				"color": {
+					"type": "string",
+					"description": "Key binding for color picker mode.",
+					"default": "c"
+				},
+				"information": {
+					"type": "string",
+					"description": "Key binding to show object information.",
+					"default": "i"
+				},
+				"cursor": {
+					"type": "string",
+					"description": "Key binding for cursor mode.",
+					"default": "k"
+				}
+			}
+		},
+		"colors": {
+			"type": "object",
+			"description": "Custom color palette definitions. These define named colors like BLUE, RED, GREEN, etc. for use in manimgl scenes.",
+			"default": {},
+			"additionalProperties": {
+				"type": "string",
+				"pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$"
+			},
+			"properties": {
+				"blue_e": { "type": "string", "description": "Blue shade - darkest (E level).", "default": "#1C758A" },
+				"blue_d": { "type": "string", "description": "Blue shade - dark (D level).", "default": "#29ABCA" },
+				"blue_c": { "type": "string", "description": "Blue shade - mid (C level).", "default": "#58C4DD" },
+				"blue_b": { "type": "string", "description": "Blue shade - bright (B level).", "default": "#9CDCEB" },
+				"blue_a": { "type": "string", "description": "Blue shade - brightest (A level).", "default": "#C7E9F1" },
+				"teal_e": { "type": "string", "description": "Teal shade - darkest.", "default": "#49A88F" },
+				"teal_d": { "type": "string", "description": "Teal shade - dark.", "default": "#55C1A7" },
+				"teal_c": { "type": "string", "description": "Teal shade - mid.", "default": "#5CD0B3" },
+				"teal_b": { "type": "string", "description": "Teal shade - bright.", "default": "#76DDC0" },
+				"teal_a": { "type": "string", "description": "Teal shade - brightest.", "default": "#ACEAD7" },
+				"green_e": { "type": "string", "description": "Green shade - darkest.", "default": "#699C52" },
+				"green_d": { "type": "string", "description": "Green shade - dark.", "default": "#77B05D" },
+				"green_c": { "type": "string", "description": "Green shade - mid.", "default": "#83C167" },
+				"green_b": { "type": "string", "description": "Green shade - bright.", "default": "#A6CF8C" },
+				"green_a": { "type": "string", "description": "Green shade - brightest.", "default": "#C9E2AE" },
+				"yellow_e": { "type": "string", "description": "Yellow shade - darkest.", "default": "#E8C11C" },
+				"yellow_d": { "type": "string", "description": "Yellow shade - dark.", "default": "#F4D345" },
+				"yellow_c": { "type": "string", "description": "Yellow shade - mid.", "default": "#FFFF00" },
+				"yellow_b": { "type": "string", "description": "Yellow shade - bright.", "default": "#FFEA94" },
+				"yellow_a": { "type": "string", "description": "Yellow shade - brightest.", "default": "#FFF1B6" },
+				"gold_e": { "type": "string", "description": "Gold shade - darkest.", "default": "#C78D46" },
+				"gold_d": { "type": "string", "description": "Gold shade - dark.", "default": "#E1A158" },
+				"gold_c": { "type": "string", "description": "Gold shade - mid.", "default": "#F0AC5F" },
+				"gold_b": { "type": "string", "description": "Gold shade - bright.", "default": "#F9B775" },
+				"gold_a": { "type": "string", "description": "Gold shade - brightest.", "default": "#F7C797" },
+				"red_e": { "type": "string", "description": "Red shade - darkest.", "default": "#CF5044" },
+				"red_d": { "type": "string", "description": "Red shade - dark.", "default": "#E65A4C" },
+				"red_c": { "type": "string", "description": "Red shade - mid.", "default": "#FC6255" },
+				"red_b": { "type": "string", "description": "Red shade - bright.", "default": "#FF8080" },
+				"red_a": { "type": "string", "description": "Red shade - brightest.", "default": "#F7A1A3" },
+				"maroon_e": { "type": "string", "description": "Maroon shade - darkest.", "default": "#94424F" },
+				"maroon_d": { "type": "string", "description": "Maroon shade - dark.", "default": "#A24D61" },
+				"maroon_c": { "type": "string", "description": "Maroon shade - mid.", "default": "#C55F73" },
+				"maroon_b": { "type": "string", "description": "Maroon shade - bright.", "default": "#EC92AB" },
+				"maroon_a": { "type": "string", "description": "Maroon shade - brightest.", "default": "#ECABC1" },
+				"purple_e": { "type": "string", "description": "Purple shade - darkest.", "default": "#644172" },
+				"purple_d": { "type": "string", "description": "Purple shade - dark.", "default": "#715582" },
+				"purple_c": { "type": "string", "description": "Purple shade - mid.", "default": "#9A72AC" },
+				"purple_b": { "type": "string", "description": "Purple shade - bright.", "default": "#B189C6" },
+				"purple_a": { "type": "string", "description": "Purple shade - brightest.", "default": "#CAA3E8" },
+				"grey_e": { "type": "string", "description": "Grey shade - darkest (almost black).", "default": "#222222" },
+				"grey_d": { "type": "string", "description": "Grey shade - dark.", "default": "#444444" },
+				"grey_c": { "type": "string", "description": "Grey shade - mid.", "default": "#888888" },
+				"grey_b": { "type": "string", "description": "Grey shade - bright.", "default": "#BBBBBB" },
+				"grey_a": { "type": "string", "description": "Grey shade - brightest (almost white).", "default": "#DDDDDD" },
+				"white": { "type": "string", "description": "Pure white color.", "default": "#FFFFFF" },
+				"black": { "type": "string", "description": "Pure black color.", "default": "#000000" },
+				"grey_brown": { "type": "string", "description": "Greyish brown color.", "default": "#736357" },
+				"dark_brown": { "type": "string", "description": "Dark brown color.", "default": "#8B4513" },
+				"light_brown": { "type": "string", "description": "Light brown color.", "default": "#CD853F" },
+				"pink": { "type": "string", "description": "Pink color.", "default": "#D147BD" },
+				"light_pink": { "type": "string", "description": "Light pink color.", "default": "#DC75CD" },
+				"green_screen": { "type": "string", "description": "Chroma key green for green screen effects.", "default": "#00FF00" },
+				"orange": { "type": "string", "description": "Orange color.", "default": "#FF862F" },
+				"pure_red": { "type": "string", "description": "Pure red color.", "default": "#FF0000" },
+				"pure_green": { "type": "string", "description": "Pure green color.", "default": "#00FF00" },
+				"pure_blue": { "type": "string", "description": "Pure blue color.", "default": "#0000FF" }
+			}
+		},
+		"log_level": {
+			"type": "string",
+			"description": "Logging verbosity level for manimgl output.",
+			"default": "INFO",
+			"enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+		},
+		"universal_import_line": {
+			"type": "string",
+			"description": "Import line that is executed automatically when entering interactive mode (self.embed()).",
+			"default": "from manimlib import *"
+		},
+		"ignore_manimlib_modules_on_reload": {
+			"type": "boolean",
+			"description": "When true, manimlib internal modules are excluded from hot-reloading, which prevents side effects from reloading library code.",
+			"default": true
+		}
+	}
 }

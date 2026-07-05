@@ -1,116 +1,101 @@
 # ManimGL Helper
 
-ManimGL Helper 是一个面向 VS Code 的扩展，用来辅助使用 manimgl 进行数学动画开发。它提供场景检测、命令执行、检查点回放、配置文件补全和状态栏入口，帮助你在编辑器内完成更快的迭代。
+<p align="center">
+  <img src="./icon.png" alt="ManimGL Helper" width="128"/>
+</p>
 
-## 功能
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=BeiChenStanly.manimgl-helper">
+    <img src="https://vsmarketplacebadges.dev/version/BeiChenStanly.manimgl-helper.svg?colorB=0078d7" alt="Version"/>
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=BeiChenStanly.manimgl-helper">
+    <img src="https://vsmarketplacebadges.dev/installs/BeiChenStanly.manimgl-helper.svg" alt="Installs"/>
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=BeiChenStanly.manimgl-helper">
+    <img src="https://vsmarketplacebadges.dev/rating-star/BeiChenStanly.manimgl-helper.svg" alt="Rating"/>
+  </a>
+  <a href="https://github.com/BeiChenStanly/manimgl-helper/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License"/>
+  </a>
+  <a href="https://github.com/BeiChenStanly/manimgl-helper">
+    <img src="https://img.shields.io/badge/GitHub-Repo-181717?logo=github" alt="GitHub"/>
+  </a>
+</p>
 
-- 在 Python 文件中检测继承自 `Scene` 或其他以 `Scene` 结尾的基类的场景类。
-- 在场景类和检查点注释上提供 CodeLens 操作。
-- 通过终端运行当前场景、导出单个场景视频、导出当前文件中的全部场景。
-- 支持低质量快速导出。
-- 支持基于检查点注释从指定位置开始运行，并将相应代码复制到剪贴板，配合 manimgl 的交互式窗口粘贴使用。
-- 提供 `custom_config.yml` 的打开与自动创建能力，并为该文件提供悬停说明和补全。
-- 在状态栏显示 manimgl 安装状态和当前 Python 场景信息。
-- 提供创建新场景文件的命令，以及引导式 walkthrough。
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/VS%20Code-1.85%2B-0078d7?logo=visual-studio-code" alt="VS Code"/>
+  <img src="https://img.shields.io/badge/Python-3-3776AB?logo=python" alt="Python 3"/>
+  <img src="https://img.shields.io/badge/manimgl-latest-ff69b4" alt="manimgl"/>
+  <a href="https://github.com/BeiChenStanly/manimgl-helper/actions">
+    <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build"/>
+  </a>
+</p>
 
-## 安装
+<p align="center">
+  English
+  <a href="./README.zh-CN.md">简体中文</a>
+</p>
 
-1. 在 VS Code 中打开本仓库并安装依赖：
+A VS Code extension to assist [manimgl](https://github.com/3b1b/manim) math animation development. Provides scene detection, command execution, checkpoint replay, and configuration file completion to accelerate the iteration workflow within the editor.
 
-```bash
-npm install
-```
+---
 
-2. 运行扩展开发构建：
+## Features
 
-```bash
-npm run compile
-```
+- **Scene Detection** — Automatically identify scene classes inheriting from `Scene`
+- **CodeLens** — One-click run/export entry points on scene classes and checkpoints
+- **Command Execution** — Run current scene, export video (single scene / all scenes / low-quality quick export)
+- **Checkpoint Replay** — Start running from a comment marker; code is automatically copied to clipboard, works with the interactive window
+- **Configuration Support** — Auto-create, open, syntax highlight, hover hints, and completion for `custom_config.yml`
+- **Walkthrough** — Guide through the complete process of cloning, installing, verifying, and creating scenes
 
-3. 在 VS Code 的扩展开发主机中启动调试，或使用仓库现有的 watch 任务持续编译。
+## Requirements
 
-## 使用前提
+| Dependency | Description |
+|------------|-------------|
+| VS Code `>=1.85.0` | Extension runtime environment |
+| Python 3 | Must be able to import `manimlib` |
+| manimgl | Math animation engine |
 
-- 需要 VS Code 1.85.0 或更高版本。
-- 需要 Python 环境中可导入 `manimlib`。
-- 扩展默认会尝试自动检测 Python 解释器，也可以通过设置手动指定。
+The Python interpreter is auto-detected, or you can manually specify it via settings.
 
-## 常用命令
+## Commands
 
-所有命令都可以从命令面板运行，命令前缀为 ManimGL：
+All commands are executed via the Command Palette with the `ManimGL` prefix:
 
-- Run Scene (Interactive): 以交互模式运行当前场景。
-- Export Scene (Video): 导出当前场景视频。
-- Export All Scenes (Video): 导出当前文件中的全部场景。
-- Quick Export (Low Quality): 以低质量参数快速导出当前场景。
-- Run from Checkpoint: 从检查点注释位置开始运行。
-- Select Scene to Run...: 在当前文件的场景列表中选择一个场景运行。
-- Check manimgl Installation: 检查当前 Python 环境中的 manimgl 是否可用。
-- Open custom_config.yml: 打开或创建工作区根目录下的 `custom_config.yml`。
-- Create New Scene File: 创建一个新的 Python 场景文件模板。
+| Command | Description |
+|---------|-------------|
+| Run Scene (Interactive) | Run the current scene in interactive mode |
+| Export Scene (Video) | Export the current scene as video |
+| Export All Scenes (Video) | Export all scenes in the file as video |
+| Quick Export (Low Quality) | Quick export at low quality |
+| Run from Checkpoint | Start running from a checkpoint position |
+| Select Scene to Run... | Select a scene to run |
+| Check manimgl Installation | Check manimgl installation status |
+| Open custom_config.yml | Open / create the configuration file |
+| Create New Scene File | Create a scene file from template |
 
-## 编辑器内入口
+## Settings
 
-### CodeLens
+| Setting | Description |
+|---------|-------------|
+| `manimgl-helper.pythonPath` | Specify the Python interpreter path |
+| `manimgl-helper.defaultFlags` | Default CLI arguments for manimgl |
+| `manimgl-helper.autoCheckVersion` | Automatically check installation status on activation |
+| `manimgl-helper.checkpointPasteDelay` | `checkpoint_paste()` delay after interactive scene (ms) |
+| `manimgl-helper.checkpointReloadDelay` | `checkpoint_paste()` delay on hot reload (ms) |
 
-在 Python 文件中，扩展会在可识别的场景类上方显示两个操作：
-
-- Run Scene
-- Export Scene
-
-如果文件中存在检查点注释，还会在注释位置显示 `Run from: ...`。
-
-### 状态栏
-
-- 右侧状态栏会显示当前 manimgl 安装状态。
-- 左侧状态栏会显示当前 Python 文件中的场景数量或场景名称。
-- 左侧还会显示一个导出按钮，用于快速导出当前场景。
-
-## 配置
-
-扩展提供以下设置项：
-
-- `manimgl-helper.pythonPath`: 手动指定带有 manimgl 的 Python 解释器路径。
-- `manimgl-helper.defaultFlags`: 运行 manimgl 时附加的默认 CLI 参数。
-- `manimgl-helper.autoCheckVersion`: 激活扩展时是否自动检查 manimgl 安装情况。
-- `manimgl-helper.checkpointPasteDelay`: 运行交互式场景后，自动调用 `checkpoint_paste()` 的延迟。
-- `manimgl-helper.checkpointReloadDelay`: 热重载时自动调用 `checkpoint_paste()` 的延迟。
-
-## custom_config.yml
-
-扩展内置了 `custom_config.yml` 语言支持，并对该文件提供补全和悬停说明。该说明内容来自扩展内置的配置定义，而不是直接解析外部文档。
-
-## Walkthrough
-
-扩展包含一个入门 walkthrough，内容覆盖：
-
-1. 克隆 manimgl 仓库。
-2. 以 editable 模式安装 manimgl。
-3. 验证安装结果。
-4. 创建第一个场景文件。
-
-## 运行与开发
-
-仓库中可用的脚本：
+## Development
 
 ```bash
-npm run compile
-npm run watch
-npm run lint
-npm run test
+npm install         # Install dependencies
+npm run compile     # Compile
+npm run watch       # Watch mode
+npm run lint        # Lint
+npm run test        # Compile and run tests
 ```
 
-`npm run test` 会先编译，再运行 `out/test/runTest.js`。
+## License
 
-## 实现约束
-
-以下行为是当前代码真实支持的范围：
-
-- 场景检测基于类名和基类名称字符串匹配，并不会做完整的 Python 语义分析。
-- 检查点功能依赖普通注释行，不处理三引号字符串中的内容。
-- 运行和导出命令通过终端调用 `python -m manimlib`。
-- `runFromCheckpoint` 会将相关代码复制到剪贴板，然后在交互式流程中配合 `checkpoint_paste()` 使用。
-
-## 许可证
-
-本项目使用 MIT 许可证，见 [LICENSE](LICENSE)。
+[MIT](LICENSE) &copy; BeiChenStanly

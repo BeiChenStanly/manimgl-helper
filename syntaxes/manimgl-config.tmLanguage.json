@@ -1,0 +1,207 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "ManimGL Config",
+	"scopeName": "source.manimgl-config",
+	"patterns": [
+		{
+			"include": "#manimgl-keys"
+		},
+		{
+			"include": "#manimgl-constants"
+		},
+		{
+			"include": "source.yaml"
+		}
+	],
+	"repository": {
+		"manimgl-keys": {
+			"patterns": [
+				{
+					"comment": "Top-level configuration keys",
+					"match": "^\\s*(directories|window|camera|file_writer|scene|vmobject|mobject|tex|text|embed|resolution_options|sizes|key_bindings|colors|log_level|universal_import_line|ignore_manimlib_modules_on_reload)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.top-level"
+						}
+					}
+				},
+				{
+					"comment": "Directories sub-keys",
+					"match": "^\\s{2,4}(mirror_module_path|base|subdirs|cache)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.directories"
+						}
+					}
+				},
+				{
+					"comment": "Subdirs keys",
+					"match": "^\\s{4,6}(output|raster_images|vector_images|three_d_models|sounds|data|downloads|latex_cache)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.subdirs"
+						}
+					}
+				},
+				{
+					"comment": "Window sub-keys",
+					"match": "^\\s{2,4}(position_string|monitor_index|full_screen|position|size)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.window"
+						}
+					}
+				},
+				{
+					"comment": "Camera sub-keys",
+					"match": "^\\s{2,4}(resolution|background_color|fps|background_opacity)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.camera"
+						}
+					}
+				},
+				{
+					"comment": "File writer sub-keys",
+					"match": "^\\s{2,4}(ffmpeg_bin|video_codec|pixel_format|saturation|gamma)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.file-writer"
+						}
+					}
+				},
+				{
+					"comment": "Scene sub-keys",
+					"match": "^\\s{2,4}(show_animation_progress|leave_progress_bars|preview_while_skipping|default_wait_time)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.scene"
+						}
+					}
+				},
+				{
+					"comment": "Vmobject sub-keys",
+					"match": "^\\s{2,4}(default_stroke_width|default_stroke_color|default_fill_color)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.vmobject"
+						}
+					}
+				},
+				{
+					"comment": "Mobject sub-keys",
+					"match": "^\\s{2,4}(default_mobject_color|default_light_color)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.mobject"
+						}
+					}
+				},
+				{
+					"comment": "Text sub-keys",
+					"match": "^\\s{2,4}(font|alignment|font_size_for_unit_height)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.text"
+						}
+					}
+				},
+				{
+					"comment": "Embed sub-keys",
+					"match": "^\\s{2,4}(exception_mode|autoreload)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.embed"
+						}
+					}
+				},
+				{
+					"comment": "Resolution options sub-keys",
+					"match": "^\\s{2,4}(low|med|high|4k)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.resolution-options"
+						}
+					}
+				},
+				{
+					"comment": "Sizes sub-keys",
+					"match": "^\\s{2,4}(frame_height|small_buff|med_small_buff|med_large_buff|large_buff|default_mobject_to_edge_buff|default_mobject_to_mobject_buff)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.sizes"
+						}
+					}
+				},
+				{
+					"comment": "Key bindings sub-keys",
+					"match": "^\\s{2,4}(pan_3d|pan|reset|quit|select|unselect|grab|x_grab|y_grab|z_grab|resize|color|information|cursor)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.key-bindings"
+						}
+					}
+				},
+				{
+					"comment": "Tex sub-keys",
+					"match": "^\\s{2,4}(template|font_size_for_unit_height)\\s*:",
+					"captures": {
+						"1": {
+							"name": "support.function.manimgl-key.tex"
+						}
+					}
+				}
+			]
+		},
+		"manimgl-constants": {
+			"patterns": [
+				{
+					"comment": "Hex color values like #FFFFFF or #000000",
+					"match": "(#)([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})\\b",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.color.manimgl"
+						},
+						"2": {
+							"name": "constant.other.color.manimgl"
+						}
+					}
+				},
+				{
+					"comment": "Tuple values like (3840, 2160)",
+					"match": "\\(\\s*\\d+\\s*,\\s*\\d+\\s*\\)",
+					"name": "constant.other.tuple.manimgl"
+				},
+				{
+					"comment": "Color name constants",
+					"match": "\\b(BLUE(_[A-Z])?|RED(_[A-Z])?|GREEN(_[A-Z])?|YELLOW(_[A-Z])?|WHITE|BLACK|GREY(_[A-Z])?|GREY_BROWN|DARK_BROWN|LIGHT_BROWN|PINK|LIGHT_PINK|GREEN_SCREEN|ORANGE|PURE_RED|PURE_GREEN|PURE_BLUE|TEAL(_[A-Z])?|GOLD(_[A-Z])?|MAROON(_[A-Z])?|PURPLE(_[A-Z])?)\\b",
+					"name": "variable.other.constant.color.manimgl"
+				},
+				{
+					"comment": "Boolean values",
+					"match": "\\b(True|False|true|false)\\b",
+					"name": "constant.language.boolean.manimgl"
+				},
+				{
+					"comment": "Log level values",
+					"match": "\\b(DEBUG|INFO|WARNING|ERROR|CRITICAL)\\b",
+					"name": "constant.language.log-level.manimgl"
+				},
+				{
+					"comment": "Numeric values (integers and floats)",
+					"match": "\\b\\d+(\\.\\d+)?\\b",
+					"name": "constant.numeric.manimgl"
+				},
+				{
+					"comment": "Key binding single characters in quotes",
+					"match": "\"([a-zA-Z])\"",
+					"captures": {
+						"1": {
+							"name": "constant.character.keybinding.manimgl"
+						}
+					}
+				}
+			]
+		}
+	}
+}

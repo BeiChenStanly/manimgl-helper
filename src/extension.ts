@@ -13,6 +13,10 @@ export function activate(context: vscode.ExtensionContext) {
     const runner = new ManimglRunner();
     const versionChecker = new VersionChecker();
     statusBarManager = new StatusBarManager(runner, detector);
+    const configDocumentSelector = [
+        { language: 'yaml', pattern: '**/custom_config.yml' },
+        { language: 'manimgl-config', pattern: '**/custom_config.yml' }
+    ] as const;
 
     const codeLensProvider = new ManimglCodeLensProvider(detector);
     context.subscriptions.push(
@@ -259,13 +263,13 @@ class MyScene(Scene):
     const configEditor = new ConfigEditorProvider();
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            { language: 'yaml', pattern: '**/custom_config.yml' },
+            configDocumentSelector,
             configEditor
         )
     );
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            { language: 'yaml', pattern: '**/custom_config.yml' },
+            configDocumentSelector,
             configEditor,
             ':',
             ' '

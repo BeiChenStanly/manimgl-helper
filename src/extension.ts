@@ -118,9 +118,9 @@ export function activate(context: vscode.ExtensionContext) {
             } else {
                 const editor = vscode.window.activeTextEditor;
                 if (!editor || editor.document.languageId !== 'python') { return; }
-                const checkpoints = detector.detectCheckpoints(editor.document);
+                const checkpoints = detector.detectSceneCheckpoints(editor.document);
                 if (checkpoints.length === 0) {
-                    vscode.window.showWarningMessage('No checkpoint comments found in this file.');
+                    vscode.window.showWarningMessage('No checkpoint comments found inside Scene classes in this file.');
                     return;
                 }
                 const items = checkpoints.map(cp => ({

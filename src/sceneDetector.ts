@@ -42,10 +42,6 @@ export class SceneDetector {
     }
 
     detectSceneCheckpoints(document: vscode.TextDocument): CheckpointInfo[] {
-        return this.detectCheckpoints(document).filter(cp => this.isCheckpointInsideScene(document, cp.lineNumber));
-    }
-
-    detectCheckpoints(document: vscode.TextDocument): CheckpointInfo[] {
         const checkpoints: CheckpointInfo[] = [];
         const text = document.getText();
         const lines = text.split('\n');
@@ -74,6 +70,8 @@ export class SceneDetector {
             if (/^[#\-=_*]{5,}$/.test(commentContent)) { continue; }
 
             if (/^(type:|noqa|pylint:|TODO|FIXME|HACK|NOTE|XXX):?\s/.test(commentContent)) { continue; }
+
+            if (!this.isCheckpointInsideScene(document, i)) { continue; }
 
             checkpoints.push({
                 text: line,

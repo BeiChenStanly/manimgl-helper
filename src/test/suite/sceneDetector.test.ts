@@ -113,7 +113,7 @@ suite('SceneDetector - Checkpoints', () => {
         detector = new SceneDetector();
     });
 
-    test('detectCheckpoints: finds basic checkpoint comments', async () => {
+    test('detectSceneCheckpoints: finds basic checkpoint comments inside Scene bodies', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `from manimlib import *
 
@@ -127,7 +127,7 @@ class MyScene(Scene):
             language: 'python'
         });
 
-        const checkpoints = detector.detectCheckpoints(doc);
+        const checkpoints = detector.detectSceneCheckpoints(doc);
         assert.ok(checkpoints.length >= 2);
         assert.ok(checkpoints.some(cp => cp.text.includes('setup circle')));
         assert.ok(checkpoints.some(cp => cp.text.includes('animate')));
@@ -159,80 +159,81 @@ if __name__ == "__main__":
         assert.ok(!checkpoints.some(cp => cp.text.includes('top-level note')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('trailing note')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('main note')));
+    });
 
-    test('detectCheckpoints: excludes shebang', async () => {
+    test('detectSceneCheckpoints: excludes shebang', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `#!/usr/bin/env python
 from manimlib import *
 
-# my checkpoint
 class MyScene(Scene):
     def construct(self):
+        # my checkpoint
         pass
 `,
             language: 'python'
         });
 
-        const checkpoints = detector.detectCheckpoints(doc);
+        const checkpoints = detector.detectSceneCheckpoints(doc);
         assert.ok(!checkpoints.some(cp => cp.text.includes('usr/bin')));
         assert.ok(checkpoints.some(cp => cp.text.includes('my checkpoint')));
     });
 
-    test('detectCheckpoints: excludes pure separator lines', async () => {
+    test('detectSceneCheckpoints: excludes pure separator lines', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `from manimlib import *
 
-######
-# real checkpoint
-# -----
 class MyScene(Scene):
     def construct(self):
+        ######
+        # real checkpoint
+        # -----
         pass
 `,
             language: 'python'
         });
 
-        const checkpoints = detector.detectCheckpoints(doc);
+        const checkpoints = detector.detectSceneCheckpoints(doc);
         assert.ok(checkpoints.some(cp => cp.text.includes('real checkpoint')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('######')));
     });
 
-    test('detectCheckpoints: excludes empty comments', async () => {
+    test('detectSceneCheckpoints: excludes empty comments', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `from manimlib import *
 
-#
-# real checkpoint
 class MyScene(Scene):
     def construct(self):
+        #
+        # real checkpoint
         pass
 `,
             language: 'python'
         });
 
-        const checkpoints = detector.detectCheckpoints(doc);
+        const checkpoints = detector.detectSceneCheckpoints(doc);
         assert.ok(!checkpoints.some(cp => cp.text.trim() === '#'));
         assert.ok(checkpoints.some(cp => cp.text.includes('real checkpoint')));
     });
 
-    test('detectCheckpoints: excludes TODO/FIXME/HACK/NOTE/XXX', async () => {
+    test('detectSceneCheckpoints: excludes TODO/FIXME/HACK/NOTE/XXX', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `from manimlib import *
 
-# TODO: do something
-# FIXME: fix this
-# HACK: hacky solution
-# NOTE: important
-# XXX: watch out
-# real checkpoint
 class MyScene(Scene):
     def construct(self):
+        # TODO: do something
+        # FIXME: fix this
+        # HACK: hacky solution
+        # NOTE: important
+        # XXX: watch out
+        # real checkpoint
         pass
 `,
             language: 'python'
         });
 
-        const checkpoints = detector.detectCheckpoints(doc);
+        const checkpoints = detector.detectSceneCheckpoints(doc);
         assert.ok(checkpoints.some(cp => cp.text.includes('real checkpoint')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('TODO')));
         assert.ok(!checkpoints.some(cp => cp.text.includes('FIXME')));

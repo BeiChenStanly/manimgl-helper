@@ -134,8 +134,8 @@ export class ManimglRunner {
             return;
         }
 
-        // Always stop at the next checkpoint, but never cross into the next scene.
-        const checkpoints = this.detector.detectCheckpoints(doc);
+        // Always stop at the next checkpoint inside the same Scene, but never cross into the next scene.
+        const checkpoints = this.detector.detectSceneCheckpoints(doc);
         const nextCheckpoint = checkpoints.find(cp => cp.lineNumber > lineNumber);
         const nextCheckpointLine = nextCheckpoint ? nextCheckpoint.lineNumber : lines.length;
 

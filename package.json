@@ -137,6 +137,13 @@
           "minimum": 500,
           "maximum": 20000,
           "description": "Delay in milliseconds before auto-calling checkpoint_paste() after a hot-reload (reload_scene). Shorter than checkpointPasteDelay because the Python process is already running."
+        },
+        "manimgl-helper.terminalDelay": {
+          "type": "number",
+          "default": 1500,
+          "minimum": 0,
+          "maximum": 30000,
+          "description": "Delay in milliseconds before executing the manimgl command after creating a new terminal. Increase if Python environment activation (e.g., conda, venv) takes time to complete. Set to 0 to disable."
         }
       }
     },

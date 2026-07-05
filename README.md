@@ -85,6 +85,7 @@ All commands are executed via the Command Palette with the `ManimGL` prefix:
 | `manimgl-helper.autoCheckVersion` | Automatically check installation status on activation |
 | `manimgl-helper.checkpointPasteDelay` | `checkpoint_paste()` delay after interactive scene (ms) |
 | `manimgl-helper.checkpointReloadDelay` | `checkpoint_paste()` delay on hot reload (ms) |
+| `manimgl-helper.terminalDelay` | Delay before executing command in a new terminal (ms). Set to `0` to disable. Useful when Python extension auto-activates virtual environments. |
 
 ## Development
 

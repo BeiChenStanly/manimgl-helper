@@ -85,6 +85,7 @@ Python 解释器自动检测，也可通过设置手动指定。
 | `manimgl-helper.autoCheckVersion` | 激活时自动检查安装状态 |
 | `manimgl-helper.checkpointPasteDelay` | 交互场景后 `checkpoint_paste()` 延迟 (ms) |
 | `manimgl-helper.checkpointReloadDelay` | 热重载时 `checkpoint_paste()` 延迟 (ms) |
+| `manimgl-helper.terminalDelay` | 新终端中执行命令前的延迟 (ms)。设为 `0` 可禁用。当 Python 扩展自动激活虚拟环境时有用。 |
 
 ## 开发
 

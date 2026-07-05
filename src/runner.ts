@@ -31,6 +31,11 @@ export class ManimglRunner {
         return config.get<string[]>('defaultFlags', []);
     }
 
+    private getTerminalDelay(): number {
+        return vscode.workspace.getConfiguration('manimgl-helper')
+            .get<number>('terminalDelay', 1500);
+    }
+
     private disposeTerminal(): void {
         if (this.pendingPasteTimer) {
             clearTimeout(this.pendingPasteTimer);
@@ -102,7 +107,16 @@ export class ManimglRunner {
 
         const terminal = vscode.window.createTerminal('ManimGL');
         terminal.show(true);
-        terminal.sendText(command);
+        const delay = this.getTerminalDelay();
+        if (delay > 0) {
+            setTimeout(() => {
+                if (!terminal.exitStatus) {
+                    terminal.sendText(command);
+                }
+            }, delay);
+        } else {
+            terminal.sendText(command);
+        }
     }
 
     async runScene(filePath: string, sceneName: string, extraFlags: string[] = []): Promise<void> {
@@ -119,7 +133,16 @@ export class ManimglRunner {
 
         const terminal = vscode.window.createTerminal('ManimGL');
         terminal.show(true);
-        terminal.sendText(command);
+        const delay = this.getTerminalDelay();
+        if (delay > 0) {
+            setTimeout(() => {
+                if (!terminal.exitStatus) {
+                    terminal.sendText(command);
+                }
+            }, delay);
+        } else {
+            terminal.sendText(command);
+        }
     }
 
     async runFromCheckpoint(filePath: string, lineNumber: number, _checkpointText: string): Promise<void> {
@@ -194,11 +217,22 @@ export class ManimglRunner {
             terminal.show(true);
 
             const command = `${python} -m manimlib ${fileArg} ${containingScene.name} -s -e ${lineNumber + 1}`;
-            terminal.sendText(command);
-
-            this.state = 'launching';
-            this.currentFile = filePath;
-            this.scheduleCheckpointPaste();
+            const delay = this.getTerminalDelay();
+            if (delay > 0) {
+                setTimeout(() => {
+                    if (this.terminal && !this.terminal.exitStatus) {
+                        terminal.sendText(command);
+                        this.state = 'launching';
+                        this.currentFile = filePath;
+                        this.scheduleCheckpointPaste();
+                    }
+                }, delay);
+            } else {
+                terminal.sendText(command);
+                this.state = 'launching';
+                this.currentFile = filePath;
+                this.scheduleCheckpointPaste();
+            }
 
             vscode.window.showInformationMessage(
                 `Running "${containingScene.name}" to "${_checkpointText.trim()}"...`

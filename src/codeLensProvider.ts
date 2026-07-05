@@ -31,7 +31,7 @@ export class ManimglCodeLensProvider implements vscode.CodeLensProvider {
             }));
         }
 
-        const checkpoints = this.detector.detectCheckpoints(document);
+        const checkpoints = this.detector.detectSceneCheckpoints(document);
         for (const cp of checkpoints) {
             const range = new vscode.Range(cp.lineNumber, 0, cp.lineNumber, 0);
             const shortText = cp.text.trim().substring(0, 50);

@@ -41,6 +41,10 @@ export class SceneDetector {
         return scenes;
     }
 
+    detectSceneCheckpoints(document: vscode.TextDocument): CheckpointInfo[] {
+        return this.detectCheckpoints(document).filter(cp => this.isCheckpointInsideScene(document, cp.lineNumber));
+    }
+
     detectCheckpoints(document: vscode.TextDocument): CheckpointInfo[] {
         const checkpoints: CheckpointInfo[] = [];
         const text = document.getText();
@@ -77,6 +81,23 @@ export class SceneDetector {
             });
         }
         return checkpoints;
+    }
+
+    private isCheckpointInsideScene(document: vscode.TextDocument, lineNumber: number): boolean {
+        const scene = this.findContainingScene(document, lineNumber);
+        if (!scene) {
+            return false;
+        }
+
+        const sceneIndentation = this.getLineIndentation(document.lineAt(scene.lineNumber).text);
+        const checkpointIndentation = this.getLineIndentation(document.lineAt(lineNumber).text);
+
+        return checkpointIndentation > sceneIndentation;
+    }
+
+    private getLineIndentation(text: string): number {
+        const match = text.match(/^\s*/);
+        return match ? match[0].length : 0;
     }
 
     detectImportBlock(document: vscode.TextDocument): ImportBlock {

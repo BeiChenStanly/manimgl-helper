@@ -133,6 +133,29 @@ class MyScene(Scene):
         assert.ok(checkpoints.some(cp => cp.text.includes('animate')));
     });
 
+    test('detectSceneCheckpoints: excludes comments outside Scene bodies', async () => {
+        const doc = await vscode.workspace.openTextDocument({
+            content: `from manimlib import *
+
+# top-level note
+class MyScene(Scene):
+    # class note
+    def construct(self):
+        # inside construct
+        pass
+
+# trailing note
+`,
+            language: 'python'
+        });
+
+        const checkpoints = detector.detectSceneCheckpoints(doc);
+        assert.ok(checkpoints.some(cp => cp.text.includes('class note')));
+        assert.ok(checkpoints.some(cp => cp.text.includes('inside construct')));
+        assert.ok(!checkpoints.some(cp => cp.text.includes('top-level note')));
+        assert.ok(!checkpoints.some(cp => cp.text.includes('trailing note')));
+    });
+
     test('detectCheckpoints: excludes shebang', async () => {
         const doc = await vscode.workspace.openTextDocument({
             content: `#!/usr/bin/env python
